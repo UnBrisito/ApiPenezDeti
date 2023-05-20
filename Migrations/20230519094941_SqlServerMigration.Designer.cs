@@ -12,7 +12,7 @@ using SpravaPenezDeti.Data;
 namespace SpravaPenezDeti.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230516164135_SqlServerMigration")]
+    [Migration("20230519094941_SqlServerMigration")]
     partial class SqlServerMigration
     {
         /// <inheritdoc />
@@ -27,17 +27,17 @@ namespace SpravaPenezDeti.Migrations
 
             modelBuilder.Entity("DiteUcet", b =>
                 {
-                    b.Property<int>("MajiteleId")
+                    b.Property<int>("DiteIdd")
                         .HasColumnType("int");
 
-                    b.Property<int>("UctyId")
+                    b.Property<int>("UcetIdd")
                         .HasColumnType("int");
 
-                    b.HasKey("MajiteleId", "UctyId");
+                    b.HasKey("DiteIdd", "UcetIdd");
 
-                    b.HasIndex("UctyId");
+                    b.HasIndex("UcetIdd");
 
-                    b.ToTable("DiteUcet");
+                    b.ToTable("DiteUcet", (string)null);
                 });
 
             modelBuilder.Entity("SpravaPenezDeti.Models.Dite", b =>
@@ -73,7 +73,8 @@ namespace SpravaPenezDeti.Migrations
 
                     b.Property<DateTime>("CasVytoreni")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal>("Castka")
                         .HasColumnType("decimal(10, 2)");
@@ -81,9 +82,6 @@ namespace SpravaPenezDeti.Migrations
                     b.Property<string>("Detaily")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("JeOdchozi")
-                        .HasColumnType("bit");
 
                     b.Property<int>("UcetId")
                         .HasColumnType("int");
@@ -105,7 +103,8 @@ namespace SpravaPenezDeti.Migrations
 
                     b.Property<DateTime>("CasVytoreni")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Jmeno")
                         .IsRequired()
@@ -121,15 +120,15 @@ namespace SpravaPenezDeti.Migrations
 
             modelBuilder.Entity("DiteUcet", b =>
                 {
-                    b.HasOne("SpravaPenezDeti.Models.Dite", null)
+                    b.HasOne("SpravaPenezDeti.Models.Ucet", null)
                         .WithMany()
-                        .HasForeignKey("MajiteleId")
+                        .HasForeignKey("DiteIdd")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SpravaPenezDeti.Models.Ucet", null)
+                    b.HasOne("SpravaPenezDeti.Models.Dite", null)
                         .WithMany()
-                        .HasForeignKey("UctyId")
+                        .HasForeignKey("UcetIdd")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

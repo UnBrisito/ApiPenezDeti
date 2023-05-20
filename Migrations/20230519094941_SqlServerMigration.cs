@@ -33,7 +33,7 @@ namespace SpravaPenezDeti.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Jmeno = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Zustatek = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    CasVytoreni = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CasVytoreni = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -44,21 +44,21 @@ namespace SpravaPenezDeti.Migrations
                 name: "DiteUcet",
                 columns: table => new
                 {
-                    MajiteleId = table.Column<int>(type: "int", nullable: false),
-                    UctyId = table.Column<int>(type: "int", nullable: false)
+                    DiteIdd = table.Column<int>(type: "int", nullable: false),
+                    UcetIdd = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DiteUcet", x => new { x.MajiteleId, x.UctyId });
+                    table.PrimaryKey("PK_DiteUcet", x => new { x.DiteIdd, x.UcetIdd });
                     table.ForeignKey(
-                        name: "FK_DiteUcet_Deti_MajiteleId",
-                        column: x => x.MajiteleId,
+                        name: "FK_DiteUcet_Deti_UcetIdd",
+                        column: x => x.UcetIdd,
                         principalTable: "Deti",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DiteUcet_Ucty_UctyId",
-                        column: x => x.UctyId,
+                        name: "FK_DiteUcet_Ucty_DiteIdd",
+                        column: x => x.DiteIdd,
                         principalTable: "Ucty",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -72,9 +72,8 @@ namespace SpravaPenezDeti.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Castka = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Detaily = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    JeOdchozi = table.Column<bool>(type: "bit", nullable: false),
                     UcetId = table.Column<int>(type: "int", nullable: false),
-                    CasVytoreni = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CasVytoreni = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -88,9 +87,9 @@ namespace SpravaPenezDeti.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiteUcet_UctyId",
+                name: "IX_DiteUcet_UcetIdd",
                 table: "DiteUcet",
-                column: "UctyId");
+                column: "UcetIdd");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pohyby_UcetId",

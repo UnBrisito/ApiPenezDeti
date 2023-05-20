@@ -1,4 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Globalization;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace SpravaPenezDeti.Data
@@ -12,7 +16,7 @@ namespace SpravaPenezDeti.Data
             _context = context;
             _dbSet = _context.Set<T>();
         }
-        public void Create(T entity)
+        public virtual void Create(T entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             _dbSet.Add(entity);
@@ -24,15 +28,33 @@ namespace SpravaPenezDeti.Data
             _dbSet.Remove(entity);
         }
 
-        public IEnumerable<T> Get()
+        public IEnumerable<T> Get(params Func<T, bool>[] where)
         {
-            return _dbSet.OrderBy(o => o.CasVytoreni).Take(50).ToList();
+            IQueryable<T> query = _dbSet.AsQueryable();
+            var navigations = _context.Model.FindEntityType(typeof(T)).GetSkipNavigations();
+            foreach (var navigation in navigations)
+            {
+                query = query.Include(navigation.Name);
+            }
+            foreach (Func<T, bool> func in where)
+            {
+                query = query.Where(func).AsQueryable();
+            }
+            return query.OrderBy(o => o.CasVytoreni).Take(50).ToList();
         }
-
         public T GetById(int id)
         {
-            return _dbSet.FirstOrDefault(d => d.Id == id);
+            var query = _dbSet.AsQueryable();
+            var navigations = _context.Model.FindEntityType(typeof(T)).GetSkipNavigations();
+            foreach (var navigation in navigations)
+            {
+                Console.WriteLine(navigation.Name);
+                query = query.Include(navigation.Name);
+            }
+            return query.FirstOrDefault(e => e.Id == id);
         }
+
+        
 
         public bool SaveChanges()
         {
@@ -41,7 +63,8 @@ namespace SpravaPenezDeti.Data
 
         public void Update(T entity)
         {
-            throw new NotImplementedException();
+            //Entity framework nepotřebuje tohle
         }
+        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SpravaPenezDeti.Models
 {
@@ -9,6 +10,7 @@ namespace SpravaPenezDeti.Models
         [MaxLength(100)]
         public string Jmeno { get; set; }
         //[Required]
-        public IEnumerable<Ucet>? Ucty { get; set; } = new List<Ucet>();
+        [ForeignKey("UcetIdd")]
+        public List<Ucet> Ucty { get; set; } = new List<Ucet>();
     }
 }

@@ -16,7 +16,7 @@ namespace SpravaPenezDeti.Data
             modelBuilder.Entity<Ucet>().Property(p => p.CasVytoreni).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Pohyb>().Property(p => p.CasVytoreni).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Ucet>().HasMany(a => a.Pohyby).WithOne(b => b.Ucet).OnDelete(DeleteBehavior.Cascade);
-            //modelBuilder.Entity<Ucet>().HasMany(a => a.Majitele).WithMany(a => a.Ucty).UsingEntity();
+            modelBuilder.Entity<Ucet>().HasMany(a => a.Majitele).WithMany(a => a.Ucty).UsingEntity(e=>e.ToTable("DiteUcet"));
         }
     }
 }

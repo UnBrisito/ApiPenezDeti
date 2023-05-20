@@ -13,8 +13,6 @@ namespace SpravaPenezDeti.Models
         [Required]
         public string Detaily { get; set; }
         [Required]
-        public bool JeOdchozi { get; set; }
-        [Required]
         public int UcetId { get; set; }
         [Required]
         public Ucet Ucet { get; set; }
