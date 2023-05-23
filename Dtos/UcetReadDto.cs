@@ -9,7 +9,7 @@ namespace SpravaPenezDeti.Dtos
         public int id { get; set; }
         public string CasVytoreni { get; set; }
         public string Jmeno { get; set; }
-        public List<int> Majitele { get; set; } = new List<int>();
+        public List<int> IdMajitele { get; set; } = new List<int>();
         
         public decimal Zustatek { get; set; } = 0m;
     }

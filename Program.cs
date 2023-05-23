@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using SpravaPenezDeti.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,12 @@ stringBuilder.ConnectionString = builder.Configuration.GetConnectionString("SqlC
 stringBuilder.UserID = builder.Configuration["UserId"];
 stringBuilder.Password = builder.Configuration["Password"];
 // Add services to the container.
-builder.Services.AddControllersWithViews().AddControllersAsServices().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddControllersWithViews().AddControllersAsServices().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+});
+    
 builder.Services.AddScoped<IRepo<Dite>, Repo<Dite>>();
 builder.Services.AddScoped<IRepo<Ucet>, Repo<Ucet>>();
 builder.Services.AddScoped<IRepo<Pohyb>, Repo<Pohyb>>();

@@ -6,7 +6,7 @@ namespace SpravaPenezDeti.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    public class DetiController : GenericController<Dite, DiteCreateDto, DiteReadDto>
+    public class DetiController : GenericController<Dite, DiteCreateDto, DiteReadDto, DiteUpdateDto>
     {
         public DetiController (IRepo<Dite> repository, IMapper mapper) :base(repository, mapper) { }
         

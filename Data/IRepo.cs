@@ -7,6 +7,6 @@
         void Create(T entity);
         void Update(T entity);
         void Delete(T entity);
-        IEnumerable<T> Get(params Func<T, bool>[] where);
+        IEnumerable<T> Get(int page = 1, params Func<T, bool>[] where);
     }
 }

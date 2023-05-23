@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Azure;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SpravaPenezDeti.Controllers
 {
-    public abstract class GenericController<T, TCreateDto, TReadDto> : ControllerBase where T : BaseEntity
+    public abstract class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : ControllerBase where T : BaseEntity where TUpdateDto : class
     {
         protected readonly IRepo<T> _repository;
         protected readonly IMapper _mapper;
@@ -35,11 +37,27 @@ namespace SpravaPenezDeti.Controllers
             return CreatedAtRoute("GetById" + ControllerContext.ActionDescriptor.ControllerName, new { entity.Id }, entity);
         }
         [HttpDelete("{id}")]
-        public virtual ActionResult Delete(int id)
+        public virtual ActionResult Delete(int id, int parentId = 0)
         {
             var entity = _repository.GetById(id);
             if (entity == null) return NotFound();
             _repository.Delete(entity);
+            _repository.SaveChanges();
+            return NoContent();
+        }
+        [HttpPatch("{id}")]
+        public virtual ActionResult patch(int id, JsonPatchDocument<TUpdateDto> patchDoc, int parentId = 0)
+        {
+            var entity = _repository.GetById(id);
+            if (entity == null) return NotFound();
+
+            var entityUpdate = _mapper.Map<TUpdateDto>(entity);
+            patchDoc.ApplyTo(entityUpdate, ModelState);
+
+            if (!TryValidateModel(entityUpdate)) return ValidationProblem(ModelState);
+
+            _mapper.Map(entityUpdate, entity);
+            _repository.Update(entity);
             _repository.SaveChanges();
             return NoContent();
         }

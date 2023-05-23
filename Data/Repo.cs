@@ -28,7 +28,7 @@ namespace SpravaPenezDeti.Data
             _dbSet.Remove(entity);
         }
 
-        public IEnumerable<T> Get(params Func<T, bool>[] where)
+        public IEnumerable<T> Get(int page = 1, params Func<T, bool>[] where)
         {
             IQueryable<T> query = _dbSet.AsQueryable();
             var navigations = _context.Model.FindEntityType(typeof(T)).GetSkipNavigations();
@@ -40,7 +40,7 @@ namespace SpravaPenezDeti.Data
             {
                 query = query.Where(func).AsQueryable();
             }
-            return query.OrderBy(o => o.CasVytoreni).Take(50).ToList();
+            return query.OrderBy(o => o.CasVytoreni).Skip(50*page).Take(50).ToList();
         }
         public T GetById(int id)
         {

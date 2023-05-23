@@ -8,6 +8,8 @@ namespace SpravaPenezDeti.Profiles
         {
             CreateMap<Pohyb, PohybReadDto>();
             CreateMap<PohybCreateDto, Pohyb>();
+            CreateMap<Pohyb, PohybUpdateDto>();
+            CreateMap<PohybUpdateDto, Pohyb>();
         }
     }
 }
