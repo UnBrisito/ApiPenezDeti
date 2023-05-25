@@ -19,7 +19,7 @@ namespace SpravaPenezDeti.Controllers
         public override ActionResult<List<PohybReadDto>> Get(int UcetId)
         {
             var queryParameters = HttpContext.Request.Query;
-            List<Func<Pohyb, bool>> filtry = getFilters(queryParameters, out int stranka);
+            List<Func<Pohyb, bool>> filtry = GetFilters(queryParameters, out int stranka);
             filtry.Add(p => p.UcetId == UcetId);
             
             var entities = _repository.Get(stranka, filtry.ToArray());
@@ -68,22 +68,19 @@ namespace SpravaPenezDeti.Controllers
 
 
 
-        //Tohle je hrozný
-        private List<Func<Pohyb, bool>> getFilters(IQueryCollection queryParameters, out int stranka)
+        //Tohle dole je hrozný
+        private static List<Func<Pohyb, bool>> GetFilters(IQueryCollection queryParameters, out int stranka)
         {
-            List<Func<Pohyb, bool>> filtry = new List<Func<Pohyb, bool>>();
+            var filtry = new List<Func<Pohyb, bool>>();
             stranka = 0;
             foreach (var parametr in queryParameters)
             {
                 var strs = Regex.Split(parametr.Key.Trim().ToLower(), @"(max|min)");
-                Console.WriteLine(strs[strs.Count() - 1]);
-                Console.WriteLine(parametr.Value);
                 if (typeof(PohybReadDto).GetProperty(strs[strs.Count() - 1], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) != null)
                 {
                     var a = typeof(Pohyb).GetProperty(strs[strs.Count() - 1], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (a.PropertyType == typeof(string))
                     {
-                        Console.WriteLine(222);
                         filtry.Add(p => a.GetValue(p).ToString().Contains(parametr.Value));
                     }
                     else
@@ -138,10 +135,6 @@ namespace SpravaPenezDeti.Controllers
 
             }
             return filtry;
-        }
-        private int compare<V>(V a, V b) where V : struct, IComparable<V>
-        {
-            return a.CompareTo(b);
         }
     }
 }

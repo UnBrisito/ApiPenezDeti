@@ -8,6 +8,8 @@ namespace SpravaPenezDeti.Profiles
         {
             CreateMap<DiteCreateDto, Dite>();
             CreateMap<Dite, DiteReadDto>().ForMember(d => d.Ucty, options => options.MapFrom(src => src.Ucty.Select(a=>a.Id)));
+            CreateMap<Dite, DiteUpdateDto>();
+            CreateMap<DiteUpdateDto, Dite>();
         }
     }
 }

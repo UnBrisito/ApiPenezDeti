@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
@@ -34,6 +35,7 @@ namespace SpravaPenezDeti.Controllers
         [HttpPatch("{id}")]
         public override ActionResult patch(int id, JsonPatchDocument<UcetUpdateDto> patchDoc, int parentId = 0)
         {
+            Console.WriteLine(1);
             var entity = _repository.GetById(id);
             if (entity == null) return NotFound();
             
@@ -42,10 +44,18 @@ namespace SpravaPenezDeti.Controllers
 
             foreach (var operation in patchDoc.Operations)
             {
-                if (operation.OperationType == OperationType.Add)
+                if (operation.path.ToLower() == "/idmajitele/-")
                 {
                     var dite = int.TryParse(operation.value.ToString(), out int a) ? _repoDite.GetById(a) : null;
-                    entity.Majitele.Add(dite);
+                    if (operation.OperationType == OperationType.Add)
+                    {
+                        entity.Majitele.Add(dite);
+                    }
+                    if (operation.OperationType == OperationType.Remove)
+                    {
+                        entity.Majitele.Remove(dite);
+                    }
+
                 }
             }
 

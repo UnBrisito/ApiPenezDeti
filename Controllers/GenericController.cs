@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Azure;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SpravaPenezDeti.Controllers
 {
+    [EnableCors("AllowAny")]
     public abstract class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : ControllerBase where T : BaseEntity where TUpdateDto : class
     {
         protected readonly IRepo<T> _repository;
@@ -48,6 +50,7 @@ namespace SpravaPenezDeti.Controllers
         [HttpPatch("{id}")]
         public virtual ActionResult patch(int id, JsonPatchDocument<TUpdateDto> patchDoc, int parentId = 0)
         {
+
             var entity = _repository.GetById(id);
             if (entity == null) return NotFound();
 
